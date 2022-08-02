@@ -1,0 +1,85 @@
+<style>
+	.print-format {
+		padding: 4mm;
+		font-size: 8.0pt !important;
+	}
+	.print-format td {
+		vertical-align:middle !important;
+	}
+	.print-format th {
+    	background-color: transparent !important;
+	}
+	.borderless, .borderless table, .borderless tr, .borderless td, .borderless th {
+		border: 0 !important;
+	}
+	.group-heading td {
+		font-weight: bold;
+	}
+	.group-heading > td:not(:first-child){
+		border-bottom: 2px solid #000000 !important;
+	}
+	</style>
+
+	<h2 class="text-center" style="margin-top:0">{%= __(report.report_name) %}</h2>
+	<h4 class="text-center">
+		{% if (filters.customer_name) { %}
+			{%= filters.customer_name %}
+		{% } else { %}
+			{%= filters.customer || filters.supplier %}
+		{% } %}
+	</h4>
+	<h6 class="text-center">
+			{% if (filters.tax_id) { %}
+			{%= __("Tax Id: ")%}	{%= filters.tax_id %}
+			{% } %}
+	</h6>
+	<h5 class="text-center">
+		{%= __(filters.ageing_based_on) %}
+		{%= __("Until") %}
+		{%= frappe.datetime.str_to_user(filters.report_date) %}
+	</h5>
+
+	<div class="clearfix" style="width: 100%">
+		{% if(filters.payment_terms) { %}
+		<div class="pull-left">
+			<strong>{%= __("Payment Terms") %}:</strong> {%= filters.payment_terms %}
+		</div>
+		{% } %}
+		{% if(filters.credit_limit) { %}
+		<div class="pull-right">
+			<strong>{%= __("Credit Limit") %}:</strong> {%= format_currency(filters.credit_limit) %}
+		</div>
+		{% } %}
+	</div>
+
+	<table class="table borderless">
+		<thead>
+			<tr>
+					<th style="width: 12%">{%= __("Posting Date") %}</th>
+					<th style="width: 17%">{%= __("Customer") %}</th>
+					<th style="width: 16%; text-align: right">{%= __("Voucher No") %}</th>
+					<th style="width: 13%; text-align: right">{%= __("Payment Terms Template") %}</th>
+					<th style="width: 11%; text-align: right">{%= __("Due Date") %}</th>
+					<th style="width: 9%; text-align: right">{%= __("Age (Days)") %}</th>
+					<th style="width: 12%; text-align: right">{%= __("Invoiced Amount") %}</th>
+					<th style="width: 12%; text-align: right">{%= __("Outstanding Amount") %}</th>
+					<th style="text-align: right">{%= __("Customer LPO No.") %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for(var i=0, l=data.length; i<l; i++) { %}
+				<tr class="{% if (!data[i]['party']) { %} group-heading {% } %}">
+						<td>{%= frappe.datetime.str_to_user(data[i]["posting_date"]) %}</td>
+						<td>{%= data[i]["party"] %}</td>
+						<td style="text-align: right">{%= data[i]["voucher_no"] %}</td>
+						<td style="text-align: right">{%= filters.payment_terms %}</td>
+						<td style="text-align: right">{%= data[i]["due_date"] %}</td>
+						<td style="text-align: right">{%= data[i]["age"] %}</td>
+						<td style="text-align: right">{%= format_currency(data[i]["invoiced"], data[i]["currency"]) %}</td>
+						<td style="text-align: right">{%= format_currency(data[i]["outstanding"], data[i]["currency"]) %}</td>
+						<td style="text-align: right">{%= data[i]["po_no"] %}</td>
+				</tr>
+			{% } %}
+		</tbody>
+	</table>
+	<p class="text-right text-muted">{{ __("Printed On ") }}{%= frappe.datetime.str_to_user(frappe.datetime.get_datetime_as_string()) %}</p>

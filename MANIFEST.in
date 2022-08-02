@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include verteco_cust *.css
+recursive-include verteco_cust *.csv
+recursive-include verteco_cust *.html
+recursive-include verteco_cust *.ico
+recursive-include verteco_cust *.js
+recursive-include verteco_cust *.json
+recursive-include verteco_cust *.md
+recursive-include verteco_cust *.png
+recursive-include verteco_cust *.py
+recursive-include verteco_cust *.svg
+recursive-include verteco_cust *.txt
+recursive-exclude verteco_cust *.pyc
